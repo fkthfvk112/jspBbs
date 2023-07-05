@@ -16,7 +16,6 @@ public class BbsUtil {
 	
 	//답글의 화살표
 	public static String arrow(int depth) {
-		//String img = "<img src='./images/arrow1.png' width='20px' height='20px'";
 		String img = "<span>➔</span>";
 		String nbsp = "&nbsp;&nbsp;&nbsp;&nbsp;";
 		

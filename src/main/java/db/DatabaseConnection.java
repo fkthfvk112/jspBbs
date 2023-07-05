@@ -10,7 +10,7 @@ public class DatabaseConnection {
 	private DatabaseConnection() {
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/board", "root", "4228");
+			conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/board?useUnicode=true&characterEncoding=UTF-8", "root", "4228");
 			System.out.println("Success : Data base Connection");
 		} catch (SQLException e) {
 			System.out.println("fail : Data base Connection" + e);

@@ -98,7 +98,4 @@ public class BbsDto implements Serializable{
 	public void setReadCount(int readCount) {
 		this.readCount = readCount;
 	}
-	
-	
-
 }

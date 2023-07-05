@@ -63,7 +63,33 @@ public class BbsDao {
 		System.out.println("카운트" + count);
 		return count;
 	}
-	
+	public BbsDto getBbsAll(int seq) {
+		String sql = "select * from bbs where seq=?";
+		Connection conn = DatabaseConnection.getInstance();
+		PreparedStatement psmt = null;
+		ResultSet rs = null;
+		BbsDto dto = null;
+		
+		try {
+			System.out.println("............getBbsAll 1/3");
+			psmt = conn.prepareStatement(sql);
+			System.out.println("............getBbsAll 2/3");
+			psmt.setInt(1, seq);
+			rs = psmt.executeQuery();
+			System.out.println("............getBbsAll 3/3");
+			
+			if(rs.next()) {
+				dto = new BbsDto(rs.getInt("seq"), rs.getString("id"), rs.getInt("ref"), rs.getInt("step"),
+						rs.getInt("depth"), rs.getString("title"), rs.getString("content"),
+						rs.getString("wdate"), rs.getInt("del"), rs.getInt("readCount"));
+			}
+		}
+		catch(Exception e) {
+			System.out.println(e);
+		}
+		
+		return dto;
+	}
 	public BbsDto getBbs(int seq) {
 		String sql = "select * from bbs where seq=?";
 		Connection conn = DatabaseConnection.getInstance();
@@ -327,4 +353,58 @@ public class BbsDao {
 
 	    return count > 0 ? true : false;
 	}
+	
+	public int deleteBbs(int seq) {
+        System.out.println("delete 1/3 ... success");
+
+		String sql = "update bbs set del = 1 where seq = ?";
+	    Connection conn = null;
+	    PreparedStatement psmt = null;
+	    conn = DatabaseConnection.getInstance();
+        System.out.println("delete 2/3 ... success");
+        int count = 0;
+        
+	    try {
+	    	psmt = conn.prepareStatement(sql);
+	    	psmt.setInt(1, seq);
+            count = psmt.executeUpdate();
+            System.out.println("delete 3/3 ... success");
+
+	    }
+	    catch (Exception e) {
+	        System.out.println("delete Error" + e);
+		}
+	    
+	    return count;
+	}
+	
+	public int updateBbs(BbsDto dto, int seq) {
+		
+	    String sql = "UPDATE bbs "
+	            + "SET title = ?, content = ? "
+	            + "WHERE seq = ?";
+	    int result = 0;
+
+	    Connection conn = null;
+	    PreparedStatement psmt = null;
+	    conn = DatabaseConnection.getInstance();
+
+	    try {
+	        psmt = conn.prepareStatement(sql);
+	        System.out.println("updateBbs 1/2 ... success");
+
+	        psmt.setString(1, dto.getTitle());
+	        psmt.setString(2, dto.getContent());
+	        psmt.setInt(3, seq);
+	        result = psmt.executeUpdate();
+	        System.out.println("updateBbs 2/2 ... success");
+	    } catch (Exception e) {
+	        System.out.println(e);
+	    } finally {
+	        DbClose.close(psmt, conn, null);
+	    }
+	    return result;
+	}
+
+	
 }

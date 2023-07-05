@@ -24,6 +24,63 @@ public class UserDao {
 		return userDao;
 	}
 	
+	public boolean validId(String id) {
+	    String sql = "SELECT count(*) as con FROM user WHERE id = ?";
+	    
+	    Connection conn = null;
+	    PreparedStatement psmt = null;
+	    ResultSet rs = null;
+	    String existId = null;
+	    
+	    try {
+	        conn = DatabaseConnection.getInstance();
+	        psmt = conn.prepareStatement(sql);
+	        psmt.setString(1, id);
+	        rs = psmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            existId = rs.getString("con");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    } finally {
+	        DbClose.close(psmt, conn, rs);
+	    }
+	    if(Integer.parseInt(existId) >=1) return false;
+	    else return true;
+	}
+
+	public int signUp(UserDto dto) {
+		String sql = "insert into user(id, pwd, name, email, auth) "
+			+ " values (?, ?, ?, ?, 1) ";
+		Connection conn = null;
+		PreparedStatement psmt = null;
+		int count = 0;
+		try {
+			System.out.println("---1---");
+
+			
+	        conn = DatabaseConnection.getInstance();
+			System.out.println("---2---");
+
+			psmt = conn.prepareStatement(sql);
+			psmt.setString(1, dto.getId());
+			psmt.setString(2, dto.getPwd());
+			psmt.setString(3, dto.getName());
+			psmt.setString(4, dto.getEmaile());
+			System.out.println("---3---");
+
+			count = psmt.executeUpdate();
+			System.out.println("---4---");
+
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return count;
+	}
+	
 	public UserDto login(String id, String pwd){
 		UserDto dto = null;
 		String sql = "select id, pwd, name, email, auth from user where id=? and pwd=?";
